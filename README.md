@@ -77,7 +77,7 @@ Assume an example "Event" node with the extras fields:
 *. Start date/time (datetime `field_start`)
 *. End date/time (datetime `field_end`)
 *. All day event (boolean `field_all_day`)
-*. Description (string `field_description`)
+*. Description (text_format `body`)
 *. Location (string `field_location`)
 
 In a twig template, the following code with generate a link to the event to a 
@@ -85,12 +85,13 @@ Google calendar:
 
 ```twig
 {% set link = calendar_link('google', 
-  title,
-  field_start,
-  field_end,
-  field_all_day,
-  field_description,
-  field_location)
+  node.title.value,
+  node.field_start.date,
+  node.field_end.date,
+  node.field_all_day.value,
+  node.body.value,
+  node.field_location.value
+)
 %}
 <a href="{{ link }}">Add to Google</a>
 ```
@@ -99,12 +100,13 @@ Or, to create a list of links for each service:
 
 ```twig
 {% set links = calendar_links(
-  title,
-  field_start,
-  field_end,
-  field_all_day,
-  field_description,
-  field_location)
+  node.title.value,
+  node.field_start.date,
+  node.field_end.date,
+  node.field_all_day.value,
+  node.body.value,
+  node.field_location.value
+)
 %}
 <ul>
 {% for link in links %}
