@@ -3,6 +3,7 @@
 namespace Drupal\calendar_link\Twig;
 
 use Drupal\calendar_link\CalendarLinkException;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Spatie\CalendarLinks\Exceptions\InvalidLink;
 use Spatie\CalendarLinks\Link;
@@ -53,9 +54,9 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
    *   Generator key to use for link building.
    * @param string $title
    *   Calendar entry title.
-   * @param \DateTime $from
+   * @param \Drupal\Core\Datetime\DrupalDateTime|\DateTime $from
    *   Calendar entry start date and time.
-   * @param \DateTime $to
+   * @param \Drupal\Core\Datetime\DrupalDateTime|\DateTime $to
    *   Calendar entry end date and time.
    * @param bool $all_day
    *   Indicator for an "all day" calendar entry.
@@ -67,12 +68,19 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
    * @return string
    *   URL for the specific calendar type.
    */
-  public function calendarLink($type, $title, \DateTime $from, \DateTime $to, $all_day = FALSE, $description = '', $address = '') {
+  public function calendarLink($type, $title, $from, $to, $all_day = FALSE, $description = '', $address = '') {
     if (!isset(self::$types[$type])) {
       throw new CalendarLinkException($this->t('Invalid calendar link type.'));
     }
 
     try {
+      if ($from instanceof DrupalDateTime) {
+        $from = $from->getPhpDateTime();
+      }
+      if ($to instanceof DrupalDateTime) {
+        $to = $to->getPhpDateTime();
+      }
+
       $link = Link::create($title, $from, $to, $all_day);
     }
     catch (InvalidLink $e) {
@@ -95,9 +103,9 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
    *
    * @param string $title
    *   Calendar entry title.
-   * @param \DateTime $from
+   * @param \Drupal\Core\Datetime\DrupalDateTime|\DateTime $from
    *   Calendar entry start date and time.
-   * @param \DateTime $to
+   * @param \Drupal\Core\Datetime\DrupalDateTime|\DateTime $to
    *   Calendar entry end date and time.
    * @param bool $all_day
    *   Indicator for an "all day" calendar entry.
@@ -111,7 +119,7 @@ class CalendarLinkTwigExtension extends \Twig_Extension {
    *   - type_name: Human-readable name for the calendar type.
    *   - url: URL for the specific calendar type.
    */
-  public function calendarLinks($title, \DateTime $from, \DateTime $to, $all_day = FALSE, $description = '', $address = '') {
+  public function calendarLinks($title, $from, $to, $all_day = FALSE, $description = '', $address = '') {
     $links = [];
 
     foreach (self::$types as $type => $name) {
