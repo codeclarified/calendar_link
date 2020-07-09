@@ -10,8 +10,14 @@
         "issues": "https://www.drupal.org/project/issues/calendar_link",
         "source": "http://cgit.drupalcode.org/calendar_link"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/codeclarified/calendar-links"
+        }
+    ],
     "require": {
-        "spatie/calendar-links": "^1.0"
+        "spatie/calendar-links": "dev-icsfix"
     },
     "authors": [
         {
